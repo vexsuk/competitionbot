@@ -14,3 +14,7 @@ CompetitionBot is a bot designed to repost competition entries into a private Di
 }
 ```
 - Execute `node index.js` to start the program.
+
+## Bug Reports
+
+Please use JIRA: https://vexsuk.atlassian.net/jira/software/c/projects/CB/issues
