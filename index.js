@@ -11,6 +11,8 @@ const client = new Discord.Client();
 const config = require('./config/discordConfig.json');
 const token = require('./config/credentials.json').token;
 
+const exclamations = ':exclamation::exclamation::exclamation:'
+
 client.once('ready', () => {
     const submittedChannel = client.channels.cache.get(config.channels.submit);
 
@@ -19,14 +21,17 @@ client.once('ready', () => {
         if (message.guild && message.guild.id === config.serverId) {
             // if it is, then check that the post is in the right channel...
             if (message.channel.id === config.channels.monitor) {
+                // get the content
                 const messageContent = message.content;
 
+                // check if user has previously submitted
                 const hasSubmitted = submitters.indexOf(message.author.id) !== -1;
 
+                // message composition
                 let header = `**A new landing has been submitted from ${message.member} (${message.author.tag}/${message.member.nickname})**:`
 
                 if (hasSubmitted) {
-                    header = `${header}\n**!!! THIS PILOT HAS SUBMITTED BEFORE !!!**`;
+                    header = `${header}\n**${exclamations} THIS PILOT HAS SUBMITTED BEFORE ${exclamations}**`;
                 } else {
                     submitters.push(message.author.id);
                     submittedStream.write(message.author.id + '\n')
@@ -38,6 +43,7 @@ client.once('ready', () => {
                     content = `${content}${messageContent}`
                 }
 
+                // get any attachments and their URLs
                 const attachments = []
 
                 message.attachments.each(attachment => {
@@ -48,14 +54,16 @@ client.once('ready', () => {
 
                 let sentMessage;
 
+                // send copied message
                 submittedChannel.send(`${header}\n\n${content}`)
                 .then(response => {
                     sentMessage = response;
                     return message.delete();
                 })
                 .then(response => {
+                    // DM user that submission has been received
                     return message.author.send(
-                        `**Thanks for your landing competition submission!**\nYour submission has been received - this is what you sent us:\`\`\`\n${content}\`\`\`\nKeep an eye out for when the winner of the landing competition is announced in the Discord server.\n**Best of luck!**`
+                        `**Thank you for your landing competition submission!**\nYour submission has been received - this is what you sent us:\`\`\`\n${content}\`\`\`\nKeep an eye out for when the winner of the landing competition is announced in the Discord server.\n**Best of luck!**`
                     )
                 })
                 .catch(error => {
@@ -63,6 +71,7 @@ client.once('ready', () => {
                     if (error.code === 50007) {
                         sentMessage.edit(`${sentMessage.content}\n\n**NOTE**: This user has DMs disabled!`)
                     } else {
+                        // error: message admin of bot with error
                         try {
                             client.users.cache.get(config.admin).send(`**HELP!!!**\n\`\`\`${error}\`\`\``);
                         } catch {
