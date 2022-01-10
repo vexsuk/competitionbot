@@ -4,7 +4,7 @@ const fs = require('fs');
 const submittedStream = fs.createWriteStream('usersSubmitted.txt', {flags: 'a'});
 const errorStream = fs.createWriteStream('errors.txt', {flags: 'a'});
 
-const submitters = fs.readFileSync('usersSubmitted.txt').toString().split('\n')
+const submitters = fs.existsSync('./usersSubmitted.txt') ? fs.readFileSync('usersSubmitted.txt').toString().split('\n') : [];
 
 const client = new Discord.Client();
 

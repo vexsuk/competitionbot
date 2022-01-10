@@ -103,5 +103,10 @@ dist
 # TernJS port file
 .tern-port
 
-# credentials
+# local config files
 credentials.json
+discordConfig.json
+
+# local storage files
+errors.txt
+usersSubmitted.txt
