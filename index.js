@@ -52,6 +52,9 @@ client.once('ready', () => {
 
                 content = `${content}${content ? '\n' : ''}${attachments.join('\n')}`;
 
+                /// some logging
+                console.log(`${header}\n\n${content}`);
+
                 let sentMessage;
 
                 // send copied message
